@@ -56,7 +56,20 @@ export default {
               coverBasicUrl:'http://www.globalmazu.org/mazuFile/',
               qrCodeBasicUrl:'http://shopqrcode.yeahcai.cn',
               yeCaiBasicUrl:'http://yecai.happycp.cn',
-              appBaickUrl:'http://happcpapp.yeahcai.cn'
+              appBaickUrl:'http://happcpapp.yeahcai.cn',
+              colors:[
+                  '#000000',
+                  '#eeece0',
+                  '#1c487f',
+                  '#4d80bf',
+                  '#c24f4a',
+                  '#8baa4a',
+                  '#7b5ba1',
+                  '#46acc8',
+                  '#f9963b',
+                  '#ffffff',
+                  '#f47023'
+              ]
           },
         /*生成请求时间戳*/
         genTimestamp:function () {

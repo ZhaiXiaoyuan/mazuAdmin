@@ -31,18 +31,32 @@
                     </template>
                 </el-table-column>
                 <el-table-column prop="headline" label="标题"  align="center"></el-table-column>
+                <el-table-column label="类型" align="center" width="60">
+                    <template slot-scope="scope">
+                       {{scope.row.newsType|newsType}}
+                    </template>
+                </el-table-column>
+               <!-- <el-table-column label="概要" align="center" width="60">
+                    <template slot-scope="scope">
+                        {{scope.row.summary}}
+                    </template>
+                </el-table-column>-->
                 <el-table-column label="封面" align="center" width="60">
                     <template slot-scope="scope">
                         <img :src="basicConfig.coverBasicUrl+scope.row.cover" style="width: 40px;height: 40px;" alt="">
                     </template>
                 </el-table-column>
-                <el-table-column prop="url" label="链接"  align="center"></el-table-column>
+                <el-table-column label="发布时间" align="center">
+                    <template slot-scope="scope">
+                        {{scope.row.submitTime|formatDate('yyyy-MM-dd hh:mm')}}
+                    </template>
+                </el-table-column>
                 <el-table-column label="操作"  align="center">
                     <template slot-scope="scope">
                         <span @click="openFormModal(scope.row)" class="cm-btn cm-link-btn">编辑</span>
-                        <span @click="openFormModal(scope.row)" class="cm-btn cm-link-btn">上移</span>
+                        <!--<span @click="openFormModal(scope.row)" class="cm-btn cm-link-btn">上移</span>
                         <span @click="openFormModal(scope.row)" class="cm-btn cm-link-btn">下移</span>
-                        <span @click="openFormModal(scope.row)" class="cm-btn cm-link-btn">置顶</span>
+                        <span @click="openFormModal(scope.row)" class="cm-btn cm-link-btn">置顶</span>-->
                         <span @click="remove(scope.$index)" class="cm-btn cm-link-btn">删除</span>
                     </template>
                 </el-table-column>
@@ -58,27 +72,39 @@
         </div>
 
 
-        <el-dialog :title="curEntry?'编辑banner':'新增banner'" class="edit-dialog" :visible.sync="formModalFlag" v-if="formModalFlag" width="60%">
+        <el-dialog :title="curEntry?'编辑动态':'新增动态'" class="edit-dialog" :visible.sync="formModalFlag" v-if="formModalFlag" width="80%">
             <div class="dialog-body">
-                <div style="width: 60%;">
+                <div>
                     <el-form ref="form" :model="form" label-width="100px">
-                        <el-form-item label="标题：" prop="headline">
-                            <el-input v-model="form.headline" placeholder="请输入标题"></el-input>
-                        </el-form-item>
-                        <el-form-item label="链接：" prop="url">
-                            <el-input v-model="form.url" placeholder="请输入链接"></el-input>
-                        </el-form-item>
-                        <el-form-item label="上传图片：" prop="cover">
-                            <div class="cm-pic-uploader" :class="{'anew':form.cover}">
-                                <div class="wrapper">
-                                    <img :src="form.cover" alt="">
-                                    <div class="btn-wrap">
-                                        <input  type="file" id="file-input" accept="image/*" @change="selectFile()">
-                                        <div class="cm-btn upload-btn"><i class="icon el-icon-plus"></i></div>
-                                        <span class="cm-btn cm-link-btn text-upload-btn">重新上传</span>
+                        <div style="width: 60%;">
+                            <el-form-item label="标题：" prop="headline">
+                                <el-input v-model="form.headline" placeholder="请输入标题"></el-input>
+                            </el-form-item>
+                            <el-form-item label="类型：">
+                                <el-select v-model="form.newsType" placeholder="请选择类型">
+                                    <el-option label="协会" value="associationNews"></el-option>
+                                    <el-option label="天后宫" value="goddessPalace"></el-option>
+                                    <el-option label="妈祖世界" value="mazuWorld"></el-option>
+                                </el-select>
+                            </el-form-item>
+                            <el-form-item label="简介：" prop="summary">
+                                <el-input type="textarea" rows="5" v-model="form.summary" placeholder="请输入简介"></el-input>
+                            </el-form-item>
+                            <el-form-item label="上传图片：" prop="cover">
+                                <div class="cm-pic-uploader" :class="{'anew':form.cover}">
+                                    <div class="wrapper">
+                                        <img :src="basicConfig.coverBasicUrl+form.cover" alt="">
+                                        <div class="btn-wrap">
+                                            <input  type="file" id="file-input" accept="image/*" @change="selectFile()">
+                                            <div class="cm-btn upload-btn"><i class="icon el-icon-plus"></i></div>
+                                            <span class="cm-btn cm-link-btn text-upload-btn">重新上传</span>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
+                            </el-form-item>
+                        </div>
+                        <el-form-item label="内容：" prop="reason">
+                            <div id="editor" style="max-width: 800px;"></div>
                         </el-form-item>
                     </el-form>
                 </div>
@@ -126,7 +152,9 @@
                 formModalFlag:false,
                 form:{
                     cover:null,
+                    newsType:'associationNews',//associationNews、goddessPalace、mazuWorld
                 },
+                editor:null,
             }
         },
         created(){
@@ -140,12 +168,14 @@
                     searchContent:'',
                     pageIndex:this.pager.pageIndex,
                     pageSize:this.pager.pageSize,
+                    newsType:'',//associationNews、goddessPalace、mazuWorld
+                    state:'',//removed、published
                 }
                 this.pager.loading=true;
-                Vue.api.getBannerList(params).then((resp)=>{
+                Vue.api.getNewsList(params).then((resp)=>{
                     if(resp.respCode=='2000'){
                         let data=JSON.parse(resp.respMsg);
-                        let list=data.bannerList;
+                        let list=data.associationNewsList;
                         this.entryList=list;
                         this.pager.total=data.count;
                           console.log('this.entryList:',this.entryList);
@@ -156,6 +186,16 @@
                     },500)
                 });
             },
+            getNewsDetail:function (entry) {
+                Vue.api.getNewsDetail({id:entry.id}).then((resp)=>{
+                    if(resp.respCode=='2000'){
+                        let detail=JSON.parse(resp.respMsg);
+                        this.editor.txt.html(detail.content)
+                    }else{
+
+                    }
+                });
+            },
             openFormModal:function (entry) {
                 this.curEntry=entry;
                 console.log('this.curEntry:',this.curEntry);
@@ -163,35 +203,57 @@
                     this.form={...this.curEntry}
                 }
                 this.formModalFlag=true;
+                setTimeout(()=>{
+                    let E = window.wangEditor;
+                    this.editor = new E('#editor');
+                    this.editor.customConfig.colors =Vue.tools.basicConfig.colors;
+                    this.editor.customConfig.uploadImgShowBase64 = true   // 使用 base64 保存图片
+                    this.editor.create();
+                    this.editor.txt.clear();
+                    if(this.curEntry){
+                        this.getNewsDetail(entry);
+                    }
+                },500);
             },
             closeFormModal:function () {
                 this.formModalFlag=false;
                 this.$refs['form'].resetFields();
             },
             save:function () {
-             /*   if(!this.form.cover){
-                    Vue.operationFeedback({type:'warn',text:'请上传封面'});
-                    return;
-                }*/
                 if(!this.form.headline){
                     Vue.operationFeedback({type:'warn',text:'请输入标题'});
                     return;
                 }
-                if(!this.form.url){
-                    Vue.operationFeedback({type:'warn',text:'请输入链接'});
+                if(!this.form.newsType){
+                    Vue.operationFeedback({type:'warn',text:'请选择类型'});
+                    return;
+                }
+                if(!this.form.summary){
+                    Vue.operationFeedback({type:'warn',text:'请选择简介'});
+                    return;
+                }
+                if(!this.form.cover){
+                    Vue.operationFeedback({type:'warn',text:'请上传封面'});
+                    return;
+                }
+                this.form.content=this.editor.txt.html();
+                if(!this.form.content){
+                    Vue.operationFeedback({type:'warn',text:'请输入内容'});
                     return;
                 }
                 let fb=Vue.operationFeedback({text:'保存中...'});
                 let params={
                     adminId:this.account.id,
                     headline:this.form.headline,
-                    url:this.form.url,
-                    coverPicFile:this.form.file,
+                    newsType:this.form.newsType,
+                    summary:this.form.summary,
+                    content:this.form.content,
+                    coverPicFile:this.form.file&&this.form.file!='undefined'?this.form.file:null,
+                    state:'published',//
                 }
                 if(this.curEntry){
                     params.id=this.curEntry.id;
-                    params.sort=1;
-                    Vue.api.updateBanner(Vue.tools.toFormData(params)).then((resp)=>{
+                    Vue.api.updateNews(Vue.tools.toFormData(params)).then((resp)=>{
                         if(resp.respCode=='2000'){
                             this.getList(this.pager.pageIndex);
                             fb.setOptions({type:'complete',text:'保存成功'});
@@ -202,7 +264,7 @@
                     });
                 }else{
                     console.log('this.form:',this.form);
-                    Vue.api.addBanner(Vue.tools.toFormData(params)).then((resp)=>{
+                    Vue.api.addNews(Vue.tools.toFormData(params)).then((resp)=>{
                         if(resp.respCode=='2000'){
                             this.getList();
                             fb.setOptions({type:'complete',text:'保存成功'});
@@ -230,16 +292,16 @@
             selectFile:function () {
                 let file=document.getElementById('file-input').files[0];
                 this.form.file=file;
-                /*Vue.tools.fileToBlob(file,(data)=>{
+                Vue.tools.fileToBlob(file,(data)=>{
                     this.cropModal({
                         img:data,
-                        fixedNumber:[1900,320],
+                        fixedNumber:[180,124],
                         ok:(data)=>{
                             this.form.cover=data.base64;
-                           /!* this.form.file=data.blob;*!/
+                           /* this.form.file=data.blob;*/
                         }
                     });
-                });*/
+                });
             },
         },
         mounted () {

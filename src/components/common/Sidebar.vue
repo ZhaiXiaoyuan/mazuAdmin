@@ -75,6 +75,18 @@
                         index: '/bannerAdmin',
                         title: '推广位',
                     },
+                    {
+                        code:'02',
+                        icon: '#icon-tupian',
+                        index: '/dynamicAdmin',
+                        title: '动态',
+                    },
+                    {
+                        code:'03',
+                        icon: '#icon-tupian',
+                        index: '/memberAdmin',
+                        title: '协会成员',
+                    },
                   /*  {
                         code:'02',
                         icon: '#icon-paiming',

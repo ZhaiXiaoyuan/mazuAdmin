@@ -41,7 +41,7 @@ export default {
 
     /**/
     //临时测试
-      let basicUrl=false&&process.env.NODE_ENV=='development'?'http://zyu-server.wicp.net:19356/yecai':'http://www.globalmazu.org:8801/mazu-webConsole/';
+      let basicUrl=false&&process.env.NODE_ENV=='development'?'http://zyu-server.wicp.net:19356/yecai':'http://api.globalmazu.org:8801/mazu-webConsole/';
 /*      let basicUrl=false&&process.env.NODE_ENV=='development'?'http://api.yeahcai.com/yecai':'https://api.linqi.tech:34631';*/
 
       function sessionInfo() {
@@ -74,6 +74,78 @@ export default {
             return Vue.http.ajax({
                 method: 'post',
                 url: basicUrl+'banner/addBanner',
+                params: params
+            });
+        },
+        //编辑协会动态
+        updateBanner:function (params) {
+            return Vue.http.ajax({
+                method: 'post',
+                url: basicUrl+'banner/updateBanner',
+                params: params
+            });
+        },
+        //获取动态的分页列表
+        getNewsList:function (params) {
+            return Vue.http.ajax({
+                method: 'post',
+                url: basicUrl+'associationNews/getAssociationNewsList',
+                params: params
+            });
+        },
+        //添加动态
+        addNews:function (params) {
+            return Vue.http.ajax({
+                method: 'post',
+                url: basicUrl+'associationNews/addAssociationNews',
+                params: params
+            });
+        },
+        //根据id获取动态详情
+        getNewsDetail:function (params) {
+            return Vue.http.ajax({
+                method: 'post',
+                url: basicUrl+'associationNews/getAssociationNewsInfo',
+                params: params
+            });
+        },
+        //编辑动态
+        updateNews:function (params) {
+            return Vue.http.ajax({
+                method: 'post',
+                url: basicUrl+'associationNews/updateAssociationNews',
+                params: params
+            });
+        },
+        //获取成员单位的分页列表
+        getMemberList:function (params) {
+            return Vue.http.ajax({
+                method: 'post',
+                url: basicUrl+'associationNews/getMemberOrganizationList',
+                params: params
+            });
+        },
+        //增加成员单位
+        addMember:function (params) {
+            return Vue.http.ajax({
+                method: 'post',
+                url: basicUrl+'associationNews/addMemberOrganization',
+                params: params
+            });
+        },
+        //删除成员单位
+        removeMember:function (params) {
+            return Vue.http.ajax({
+                method: 'post',
+                url: basicUrl+'associationNews/removeMemberOrganization',
+                params: params
+            });
+        },
+        //编辑成员单位
+        updateMember:function (params) {
+            return Vue.http.ajax({
+                method: 'post',
+                url: basicUrl+'associationNews/updateMemberOrganization',
                 params: params
             });
         },

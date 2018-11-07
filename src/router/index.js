@@ -25,24 +25,14 @@ export default new Router({
                     component: resolve => require(['../page/banner/BannerAdmin.vue'], resolve)
                 },
                 {
-                    path: '/bookListAdmin',
-                    name:'bookListAdmin',
-                    component: resolve => require(['../page/book/BookListAdmin.vue'], resolve)
+                    path: '/dynamicAdmin',
+                    name:'dynamicAdmin',
+                    component: resolve => require(['../page/dynamic/DynamicAdmin.vue'], resolve)
                 },
                 {
-                    path: '/goodsAdmin',
-                    name:'goodsAdmin',
-                    component: resolve => require(['../page/book/GoodsAdmin.vue'], resolve)
-                },
-                {
-                    path: '/adviceAdmin',
-                    name:'adviceAdmin',
-                    component: resolve => require(['../page/wish/AdviceAdmin.vue'], resolve)
-                },
-                {
-                    path: '/cardAdmin',
-                    name:'cardAdmin',
-                    component: resolve => require(['../page/card/CardAdmin.vue'], resolve)
+                    path: '/memberAdmin',
+                    name:'memberAdmin',
+                    component: resolve => require(['../page/member/MemberAdmin.vue'], resolve)
                 },
             ]
         },
