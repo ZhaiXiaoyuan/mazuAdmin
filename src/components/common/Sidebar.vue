@@ -43,7 +43,7 @@
     }
     .sidebar > ul {
         height:100%;
-        background-color: #fff !important;
+      /*  background-color: #fff !important;*/
     }
     .icon{
         width: 18px;
@@ -51,12 +51,12 @@
         margin-right: 5px;
         vertical-align: middle;
     }
-    .el-menu-item{
+   /* .el-menu-item{
         background-color: #fff !important;
         color: rgba(122, 205, 244, 1) !important;
-    }
+    }*/
     .el-menu-item.active{
-        background-color: rgba(122, 205, 244, 0.9) !important;
+        background-color: rgba(40, 52, 70, 1) !important;
         color: #fff !important;
     }
 </style>
@@ -71,100 +71,40 @@
                 itemsConfig:[
                     {
                         code:'01',
-                        icon: '#icon-tupian',
+                        icon: '#icon-ico_AD',
                         index: '/bannerAdmin',
                         title: '推广位',
                     },
                     {
                         code:'02',
-                        icon: '#icon-tupian',
+                        icon: '#icon-xinwen',
                         index: '/dynamicAdmin',
                         title: '动态',
                     },
                     {
                         code:'03',
-                        icon: '#icon-tupian',
+                        icon: '#icon-kehu',
                         index: '/memberAdmin',
                         title: '协会成员',
                     },
-                  /*  {
-                        code:'02',
-                        icon: '#icon-paiming',
-                        index: '2',
-                        title: '排名',
-                        subs: [
-                            {
-                                index: '/saleRank',
-                                title: '销售排名'
-                            },
-                            {
-                                index: '/benefitRank',
-                                title: '收益排名'
-                            },
-                            {
-                                index: '/oddsRank',
-                                title: '中奖率排名'
-                            }
-                        ]
-                    },
-                    {
-                        code:'03',
-                        icon: '#icon-caiwu2',
-                        index: '3',
-                        title: '财务系统',
-                        subs: [
-                            {
-                                index: '/rebatesRecord',
-                                title: '返点记录'
-                            },
-                            {
-                                index: '/log',
-                                title: '操作日志'
-                            }
-                        ]
-                    },
                     {
                         code:'04',
-                        icon: '#icon-permissions',
-                        index: '/permission',
-                        title: '权限管理',
+                        icon: '#icon-shipin',
+                        index: '/videoAdmin',
+                        title: '课程视频',
                     },
                     {
                         code:'05',
-                        icon: '#icon-xitongshezhi',
-                        index: '/setting',
-                        title: '系统设置',
+                        icon: '#icon-tupian',
+                        index: '/galleryAdmin',
+                        title: '相册',
                     },
                     {
                         code:'06',
-                        icon: '#icon-weibiaoti4',
-                        index: '/statistics',
-                        title: '用户信息',
-                    },
-                    {
-                        code:'07',
-                        icon: '#icon-tongji',
-                        index: '/saleStatistics',
-                        title: '门店信息',
-                    },
-                    {
-                        code:'08',
-                        icon: '#icon-dingdan',
-                        index: '/orderStatistics',
-                        title: '订单统计',
-                    },
-                    {
-                        code:'09',
-                        icon: '#icon-xiugaimima',
+                        icon: '#icon-xitongshezhi',
                         index: '/setPassword',
                         title: '修改密码',
                     },
-                    {
-                        code:'10',
-                        icon: '#icon-dingdan',
-                        index: '/order',
-                        title: '订单统计',
-                    },*/
                 ],
                 items: []
             }

@@ -56,7 +56,7 @@
         font-size: 22px;
         line-height: 70px;
         color: #fff;
-        background: rgba(122, 205, 244, 1);
+      /*  background: rgba(122, 205, 244, 1);*/
     }
     .collapse-btn{
         float: left;

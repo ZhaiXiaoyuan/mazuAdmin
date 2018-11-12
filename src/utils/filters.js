@@ -33,43 +33,6 @@ Vue.filter('moneyFormat',function(str){
     return (str/100).toFixed(2);
 });
 
-/*订单状态*/
-Vue.filter('orderStatus',function(str){
-    str+='';
-    let result='';
-    switch (str){
-        //"waitPay","waitSent","waitReach","borrowing", "waitReturn","waitInventory","waitSettlement","finish","cancel"
-        //待付款，待发货，待收货，借阅中，待归还，待入库，待结算，已结算，取消
-        case 'waitPay':
-            result='待付款';
-            break;
-        case 'waitSent':
-            result='待发货';
-            break;
-        case 'waitReach':
-            result='待收货';
-            break;
-        case 'borrowing':
-            result='借阅中';
-            break;
-        case 'waitReturn':
-            result='待归还';
-            break;
-        case 'waitInventory':
-            result='待入库';
-            break;
-        case 'waitSettlement':
-            result='待结算';
-            break;
-        case 'finish':
-            result='已结算';
-            break;
-        case 'cancel':
-            result='已取消';
-            break;
-    }
-    return result;
-});
 
 /*值空时显示字符*/
 Vue.filter('empty',function(str){
@@ -92,3 +55,29 @@ Vue.filter('newsType',function(str){
     }
     return result;
 });
+
+/*数据状态*/
+Vue.filter('targetStatus',function(str){
+    let result='';
+    switch (str){
+        case 'published':
+            result='已发布';
+            break;
+        case 'removed':
+            result='已下架';
+            break;
+    }
+    return result;
+});
+
+/*文本显示裁剪*/
+Vue.filter('ellipsis',function(txt,length){
+    console.log('length:',length);
+    var str = txt;
+    length=length?length:100;
+    if(txt.length>length){
+        return str.substr(0,length) + '...' ;
+    }
+    return txt;
+});
+

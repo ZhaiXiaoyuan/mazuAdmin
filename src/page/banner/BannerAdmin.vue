@@ -40,9 +40,9 @@
                 <el-table-column label="操作"  align="center">
                     <template slot-scope="scope">
                         <span @click="openFormModal(scope.row)" class="cm-btn cm-link-btn">编辑</span>
-                        <span @click="openFormModal(scope.row)" class="cm-btn cm-link-btn">上移</span>
-                        <span @click="openFormModal(scope.row)" class="cm-btn cm-link-btn">下移</span>
-                        <span @click="openFormModal(scope.row)" class="cm-btn cm-link-btn">置顶</span>
+                        <span @click="swapSort(scope.$index,'up')" class="cm-btn cm-link-btn">上移</span>
+                        <span @click="swapSort(scope.$index,'down')" class="cm-btn cm-link-btn">下移</span>
+                        <span @click="stickBanner(scope.$index)" class="cm-btn cm-link-btn">置顶</span>
                         <span @click="remove(scope.$index)" class="cm-btn cm-link-btn">删除</span>
                     </template>
                 </el-table-column>
@@ -58,7 +58,7 @@
         </div>
 
 
-        <el-dialog :title="curEntry?'编辑banner':'新增banner'" class="edit-dialog" :visible.sync="formModalFlag" v-if="formModalFlag" width="60%">
+        <el-dialog :title="curEntry?'编辑banner':'新增banner'" class="edit-dialog" :visible.sync="formModalFlag" v-if="formModalFlag" width="60%" :close-on-click-modal="false">
             <div class="dialog-body">
                 <div style="width: 60%;">
                     <el-form ref="form" :model="form" label-width="100px">
@@ -71,13 +71,14 @@
                         <el-form-item label="上传图片：" prop="cover">
                             <div class="cm-pic-uploader" :class="{'anew':form.cover}">
                                 <div class="wrapper">
-                                    <img :src="form.cover" alt="">
+                                    <img :src="form.file?form.cover:basicConfig.coverBasicUrl+form.cover" alt="">
                                     <div class="btn-wrap">
                                         <input  type="file" id="file-input" accept="image/*" @change="selectFile()">
                                         <div class="cm-btn upload-btn"><i class="icon el-icon-plus"></i></div>
                                         <span class="cm-btn cm-link-btn text-upload-btn">重新上传</span>
                                     </div>
                                 </div>
+                                <p class="tips">请上传1900*320尺寸比例的图片</p>
                             </div>
                         </el-form-item>
                     </el-form>
@@ -166,13 +167,16 @@
             },
             closeFormModal:function () {
                 this.formModalFlag=false;
+                this.form={
+                    cover:null,
+                };
                 this.$refs['form'].resetFields();
             },
             save:function () {
-             /*   if(!this.form.cover){
+                if(!this.form.cover){
                     Vue.operationFeedback({type:'warn',text:'请上传封面'});
                     return;
-                }*/
+                }
                 if(!this.form.headline){
                     Vue.operationFeedback({type:'warn',text:'请输入标题'});
                     return;
@@ -202,6 +206,7 @@
                     });
                 }else{
                     console.log('this.form:',this.form);
+                    params.isSticky=true;
                     Vue.api.addBanner(Vue.tools.toFormData(params)).then((resp)=>{
                         if(resp.respCode=='2000'){
                             this.getList();
@@ -215,7 +220,7 @@
             },
             remove:function (index) {
                 let fb=Vue.operationFeedback({text:'删除中...'});
-                Vue.api.remove({operationPlatformHandlerId:this.account.id,id:this.entryList[index].banner.id}).then((resp)=>{
+                Vue.api.removeBanner({id:this.entryList[index].id}).then((resp)=>{
                     if(resp.respCode=='2000'){
                         fb.setOptions({type:'complete',text:'删除成功'});
                         this.entryList.splice(index,1);
@@ -227,9 +232,45 @@
                     }
                 });
             },
+            swapSort:function (index,type) {
+                let id1=this.entryList[index].id;
+                let id2=null;
+                let index2=null;
+                if(type=='up'&&index>0){
+                    index2=index-1;
+                }else if(type=='down'&&index<this.entryList.length-1){
+                    index2=index+1;
+                }else{
+                    return;
+                }
+                id2=this.entryList[index2].id;
+                let fb=Vue.operationFeedback({text:'操作中...'});
+                Vue.api.swapBannerSort({id1:id1,id2:id2,}).then((resp)=>{
+                    if(resp.respCode=='2000'){
+                        fb.setOptions({type:'complete',text:'操作成功'});
+                        this.getList(this.pager.pageIndex);
+                    }else{
+                        fb.setOptions({type:'warn',text:'操作失败，'+resp.respMsg});
+                    }
+                });
+            },
+            stickBanner:function (index) {
+                let fb=Vue.operationFeedback({text:'操作中...'});
+                Vue.api.stickBanner({id:this.entryList[index].id}).then((resp)=>{
+                    if(resp.respCode=='2000'){
+                        fb.setOptions({type:'complete',text:'操作成功'});
+                        this.getList(this.pager.pageIndex);
+                    }else{
+                        fb.setOptions({type:'warn',text:'操作失败，'+resp.respMsg});
+                    }
+                });
+            },
             selectFile:function () {
                 let file=document.getElementById('file-input').files[0];
                 this.form.file=file;
+                Vue.tools.fileToBlob(file,(data)=>{
+                    this.form.cover=data;
+                })
                 /*Vue.tools.fileToBlob(file,(data)=>{
                     this.cropModal({
                         img:data,

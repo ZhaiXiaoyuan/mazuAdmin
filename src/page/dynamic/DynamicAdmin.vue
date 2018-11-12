@@ -36,14 +36,14 @@
                        {{scope.row.newsType|newsType}}
                     </template>
                 </el-table-column>
-               <!-- <el-table-column label="概要" align="center" width="60">
-                    <template slot-scope="scope">
-                        {{scope.row.summary}}
-                    </template>
-                </el-table-column>-->
                 <el-table-column label="封面" align="center" width="60">
                     <template slot-scope="scope">
                         <img :src="basicConfig.coverBasicUrl+scope.row.cover" style="width: 40px;height: 40px;" alt="">
+                    </template>
+                </el-table-column>
+                <el-table-column label="状态" align="center">
+                    <template slot-scope="scope">
+                        {{scope.row.state|targetStatus}}
                     </template>
                 </el-table-column>
                 <el-table-column label="发布时间" align="center">
@@ -54,9 +54,8 @@
                 <el-table-column label="操作"  align="center">
                     <template slot-scope="scope">
                         <span @click="openFormModal(scope.row)" class="cm-btn cm-link-btn">编辑</span>
-                        <!--<span @click="openFormModal(scope.row)" class="cm-btn cm-link-btn">上移</span>
-                        <span @click="openFormModal(scope.row)" class="cm-btn cm-link-btn">下移</span>
-                        <span @click="openFormModal(scope.row)" class="cm-btn cm-link-btn">置顶</span>-->
+                        <span @click="setStatus(scope.$index,'published')" v-if="scope.row.state=='removed'" class="cm-btn cm-link-btn">发布</span>
+                        <span @click="setStatus(scope.$index,'removed')"  v-if="scope.row.state=='published'"  class="cm-btn cm-link-btn">下架</span>
                         <span @click="remove(scope.$index)" class="cm-btn cm-link-btn">删除</span>
                     </template>
                 </el-table-column>
@@ -72,7 +71,7 @@
         </div>
 
 
-        <el-dialog :title="curEntry?'编辑动态':'新增动态'" class="edit-dialog" :visible.sync="formModalFlag" v-if="formModalFlag" width="80%">
+        <el-dialog :title="curEntry?'编辑动态':'新增动态'" class="edit-dialog" :visible.sync="formModalFlag" v-if="formModalFlag" width="80%"  :close-on-click-modal="false">
             <div class="dialog-body">
                 <div>
                     <el-form ref="form" :model="form" label-width="100px">
@@ -93,7 +92,7 @@
                             <el-form-item label="上传图片：" prop="cover">
                                 <div class="cm-pic-uploader" :class="{'anew':form.cover}">
                                     <div class="wrapper">
-                                        <img :src="basicConfig.coverBasicUrl+form.cover" alt="">
+                                        <img :src="form.file?form.cover:basicConfig.coverBasicUrl+form.cover" alt="">
                                         <div class="btn-wrap">
                                             <input  type="file" id="file-input" accept="image/*" @change="selectFile()">
                                             <div class="cm-btn upload-btn"><i class="icon el-icon-plus"></i></div>
@@ -178,7 +177,6 @@
                         let list=data.associationNewsList;
                         this.entryList=list;
                         this.pager.total=data.count;
-                          console.log('this.entryList:',this.entryList);
                     }
                     let timeout=setTimeout(()=>{
                         this.pager.loading=false;
@@ -197,6 +195,8 @@
                 });
             },
             openFormModal:function (entry) {
+                this.resetForm();
+                //
                 this.curEntry=entry;
                 console.log('this.curEntry:',this.curEntry);
                 if(this.curEntry){
@@ -217,7 +217,12 @@
             },
             closeFormModal:function () {
                 this.formModalFlag=false;
-                this.$refs['form'].resetFields();
+            },
+            resetForm:function () {
+                this.form={
+                    cover:null,
+                    newsType:'associationNews',//associationNews、goddessPalace、mazuWorld
+                };
             },
             save:function () {
                 if(!this.form.headline){
@@ -253,6 +258,7 @@
                 }
                 if(this.curEntry){
                     params.id=this.curEntry.id;
+                    params.state=this.curEntry.state;
                     Vue.api.updateNews(Vue.tools.toFormData(params)).then((resp)=>{
                         if(resp.respCode=='2000'){
                             this.getList(this.pager.pageIndex);
@@ -275,9 +281,34 @@
                     });
                 }
             },
+            setStatus:function (index,type) {
+                let entry=this.entryList[index];
+                let params={
+                    ...entry,
+                    state:type
+                }
+                let tips='';
+                switch (type){
+                    case 'published':
+                        tips='上架';
+                        break;
+                    case 'removed':
+                        tips='下架';
+                        break
+                }
+                let fb=Vue.operationFeedback({text:tips+'中...'});
+                Vue.api.updateAssociationNewsState({id:entry.id,state:type}).then((resp)=>{
+                    if(resp.respCode=='2000'){
+                        fb.setOptions({type:'complete',text:tips+'成功'});
+                        entry.state=type;
+                    }else{
+                        fb.setOptions({type:'warn',text:tips+'失败，'+resp.respMsg});
+                    }
+                });
+            },
             remove:function (index) {
                 let fb=Vue.operationFeedback({text:'删除中...'});
-                Vue.api.remove({operationPlatformHandlerId:this.account.id,id:this.entryList[index].banner.id}).then((resp)=>{
+                Vue.api.removeAssociationNews({id:this.entryList[index].id}).then((resp)=>{
                     if(resp.respCode=='2000'){
                         fb.setOptions({type:'complete',text:'删除成功'});
                         this.entryList.splice(index,1);
@@ -291,14 +322,14 @@
             },
             selectFile:function () {
                 let file=document.getElementById('file-input').files[0];
-                this.form.file=file;
+               /* this.form.file=file;*/
                 Vue.tools.fileToBlob(file,(data)=>{
                     this.cropModal({
                         img:data,
                         fixedNumber:[180,124],
                         ok:(data)=>{
                             this.form.cover=data.base64;
-                           /* this.form.file=data.blob;*/
+                            this.form.file=data.blob;
                         }
                     });
                 });

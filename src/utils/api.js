@@ -41,8 +41,7 @@ export default {
 
     /**/
     //临时测试
-      let basicUrl=false&&process.env.NODE_ENV=='development'?'http://zyu-server.wicp.net:19356/yecai':'http://api.globalmazu.org:8801/mazu-webConsole/';
-/*      let basicUrl=false&&process.env.NODE_ENV=='development'?'http://api.yeahcai.com/yecai':'https://api.linqi.tech:34631';*/
+      let basicUrl=false&&process.env.NODE_ENV=='development'?'http://zyu-server.wicp.net:12412/mazu-webConsole/':'http://api.globalmazu.org:8801/mazu-webConsole/';
 
       function sessionInfo() {
           return{
@@ -82,6 +81,46 @@ export default {
             return Vue.http.ajax({
                 method: 'post',
                 url: basicUrl+'banner/updateBanner',
+                params: params
+            });
+        },
+        //动态上下架
+        updateAssociationNewsState:function (params) {
+            return Vue.http.ajax({
+                method: 'post',
+                url: basicUrl+'associationNews/updateAssociationNewsState',
+                params: params
+            });
+        },
+        //删除协会动态
+        removeAssociationNews:function (params) {
+            return Vue.http.ajax({
+                method: 'post',
+                url: basicUrl+'associationNews/removeAssociationNews',
+                params: params
+            });
+        },
+        //移除banner
+        removeBanner:function (params) {
+            return Vue.http.ajax({
+                method: 'post',
+                url: basicUrl+'banner/removeBanner',
+                params: params
+            });
+        },
+        //上移下移banner
+        swapBannerSort:function (params) {
+            return Vue.http.ajax({
+                method: 'post',
+                url: basicUrl+'banner/swapBannerSort',
+                params: params
+            });
+        },
+        //顶置banner
+        stickBanner:function (params) {
+            return Vue.http.ajax({
+                method: 'post',
+                url: basicUrl+'banner/stickBanner',
                 params: params
             });
         },
@@ -146,6 +185,134 @@ export default {
             return Vue.http.ajax({
                 method: 'post',
                 url: basicUrl+'associationNews/updateMemberOrganization',
+                params: params
+            });
+        },
+        //根据id获取成员单位详情
+        getMemberDetail:function (params) {
+            return Vue.http.ajax({
+                method: 'post',
+                url: basicUrl+'associationNews/getMemberOrganizationInfo',
+                params: params
+            });
+        },
+        //更改管理员账号信息
+        updateAdmin:function (params) {
+            return Vue.http.ajax({
+                method: 'post',
+                url: basicUrl+'admin/updateAdmin',
+                params: params
+            });
+        },
+        //更改密码
+        updateAdminPassword:function (params) {
+            return Vue.http.ajax({
+                method: 'post',
+                url: basicUrl+'admin/updateAdminPassword',
+                params: params
+            });
+        },
+        //获取课程视频的分页列表
+        getCourseVideoList:function (params) {
+            return Vue.http.ajax({
+                method: 'post',
+                url: basicUrl+'courseVideo/getCourseVideoList',
+                params: params
+            });
+        },
+        //提交课程视频
+        addCourseVideo:function (params) {
+            return Vue.http.ajax({
+                method: 'post',
+                url: basicUrl+'courseVideo/addCourseVideo',
+                params: params
+            });
+        },
+        //删除课程视频
+        removeCourseVideo:function (params) {
+            return Vue.http.ajax({
+                method: 'post',
+                url: basicUrl+'courseVideo/removeCourseVideo',
+                params: params
+            });
+        },
+        //获取课程视频详情
+        getCourseVideoInfo:function (params) {
+            return Vue.http.ajax({
+                method: 'post',
+                url: basicUrl+'courseVideo/getCourseVideoInfo',
+                params: params
+            });
+        },
+        //课程上下架
+        updateCourseVideoState:function (params) {
+            return Vue.http.ajax({
+                method: 'post',
+                url: basicUrl+'courseVideo/updateCourseVideoState',
+                params: params
+            });
+        },
+        //课程上下移
+        swapCourseVideoSort:function (params) {
+            return Vue.http.ajax({
+                method: 'post',
+                url: basicUrl+'courseVideo/swapCourseVideoSort',
+                params: params
+            });
+        },
+        //课程顶置
+        stickCourseVideo:function (params) {
+            return Vue.http.ajax({
+                method: 'post',
+                url: basicUrl+'courseVideo/stickCourseVideo',
+                params: params
+            });
+        },
+        //获取相册的分页
+        getPhotoAlbumList:function (params) {
+            return Vue.http.ajax({
+                method: 'post',
+                url: basicUrl+'associationNews/getPhotoAlbumList',
+                params: params
+            });
+        },
+        //新建相册
+        addPhotoAlbum:function (params) {
+            return Vue.http.ajax({
+                method: 'post',
+                url: basicUrl+'associationNews/addPhotoAlbum',
+                params: params
+            });
+        },
+        //移除相册
+        removePhotoAlbum:function (params) {
+            return Vue.http.ajax({
+                method: 'post',
+                url: basicUrl+'associationNews/removePhotoAlbum',
+                params: params
+            });
+        },
+        //获取单个相册的信息
+        getPhotoAlbumInfo:function (params) {
+            return Vue.http.ajax({
+                method: 'post',
+                url: basicUrl+'associationNews/getPhotoAlbumInfo',
+                params: params
+            });
+        },
+        //上传照片
+        insertPhotoIntoAlbum:function (params) {
+            return Vue.http.ajax({
+                method: 'post',
+                url: basicUrl+'associationNews/insertPhotoIntoAlbum',
+                params: params
+            });
+        },
+        //移除照片
+        removePhotoFromAlbum:function (params) {
+            return Vue.http.ajax({
+                method: 'post',
+                url: basicUrl+'associationNews/removePhotoFromAlbum',
                 params: params
             });
         },

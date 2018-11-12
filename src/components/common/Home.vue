@@ -10,7 +10,7 @@
 </template>
 <style scoped>
     .content{
-        padding-bottom: 70px;
+        padding:20px 20px 70px 20px;
     }
 </style>
 <script>

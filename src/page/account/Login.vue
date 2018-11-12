@@ -16,7 +16,7 @@
                     <el-input type="password" placeholder="密码" v-model="ruleForm.password" @keyup.enter.native="submitForm()"></el-input>
                 </el-form-item>
                 <el-form-item prop="identifyCode" id="identify-code" style="position:relative;">
-                    <el-input type="password" placeholder="验证码" v-model="ruleForm.identifyCode" @keyup.enter.native="submitForm()" style="padding-right: 100px;"></el-input>
+                    <el-input type="text" placeholder="验证码" v-model="ruleForm.identifyCode" @keyup.enter.native="submitForm()" style="padding-right: 100px;"></el-input>
                     <identify style="position:absolute;top:0px;bottom: 0px;right: 0px;margin: auto;"></identify>
                 </el-form-item>
                 <div class="login-btn">
@@ -53,7 +53,7 @@
         position: relative;
         width:100%;
         height:100%;
-        background: #409EFF;
+       /* background: #409EFF;*/
     }
     .ms-title{
         position: absolute;
@@ -148,7 +148,7 @@
                             let data=JSON.parse(resp.respMsg);
                             console.log('data:',data);
                             this.$cookie.set('account',JSON.stringify(data),7);
-                            this.$router.push({name:'customerAdmin',params:{}});
+                            this.$router.push({name:'bannerAdmin',params:{}});
                             fb.setOptions({type:'complete',text:'登录成功'});
                         }else{
                             fb.setOptions({type:'warn',text:'登录失败，'+resp.respMsg});

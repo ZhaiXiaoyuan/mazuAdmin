@@ -55,7 +55,7 @@
         </div>
 
 
-        <el-dialog :title="curEntry?'编辑成员':'新增成员'" class="edit-dialog" :visible.sync="formModalFlag" v-if="formModalFlag" width="80%">
+        <el-dialog :title="curEntry?'编辑成员':'新增成员'" class="edit-dialog" :visible.sync="formModalFlag" v-if="formModalFlag" width="80%"  :close-on-click-modal="false">
             <div class="dialog-body">
                 <div>
                     <el-form ref="form" :model="form" label-width="100px">
@@ -76,7 +76,7 @@
                             <el-form-item label="logo：" prop="logo">
                                 <div class="cm-pic-uploader" :class="{'anew':form.logo}">
                                     <div class="wrapper">
-                                        <img :src="curEntry?basicConfig.coverBasicUrl+form.logo:form.logo" alt="">
+                                        <img :src="form.file?form.logo:basicConfig.coverBasicUrl+form.logo" alt="">
                                         <div class="btn-wrap">
                                             <input  type="file" id="file-input" accept="image/*" @change="selectFile()">
                                             <div class="cm-btn upload-btn"><i class="icon el-icon-plus"></i></div>
@@ -192,7 +192,19 @@
                     },500)
                 });
             },
+            getMemberDetail:function (entry) {
+                Vue.api.getMemberDetail({id:entry.id}).then((resp)=>{
+                    if(resp.respCode=='2000'){
+                        let detail=JSON.parse(resp.respMsg);
+                        this.editor.txt.html(detail.content)
+                    }else{
+
+                    }
+                });
+            },
             openFormModal:function (entry) {
+                this.resetForm();
+                //
                 this.curEntry=entry;
                 console.log('this.curEntry:',this.curEntry);
                 if(this.curEntry){
@@ -206,12 +218,21 @@
                     this.editor.customConfig.uploadImgShowBase64 = true   // 使用 base64 保存图片
                     this.editor.create();
                     this.editor.txt.clear();
-                    /* editor.txt.html('<p>用 JS 设置的内容</p>')*/
+                    if(this.curEntry){
+                        this.getMemberDetail(entry);
+                    }
                 },500);
             },
             closeFormModal:function () {
                 this.formModalFlag=false;
-                this.$refs['form'].resetFields();
+            },
+            resetForm:function () {
+                this.form={
+                    logo:null,
+                    regionCode:null,
+                    regionName:null,
+                };
+                this.curEntry=null;
             },
             save:function () {
                 if(!this.form.name){
@@ -285,13 +306,13 @@
             },
             selectFile:function () {
                 let file=document.getElementById('file-input').files[0];
-                this.form.file=file;
+              /*  this.form.file=file;*/
                 Vue.tools.fileToBlob(file,(data)=>{
                     this.cropModal({
                         img:data,
                         ok:(data)=>{
                             this.form.logo=data.base64;
-                           /* this.form.file=data.blob;*/
+                            this.form.file=data.blob;
                         }
                     });
                 });

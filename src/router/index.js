@@ -15,11 +15,6 @@ export default new Router({
                     component: resolve => require(['../page/customer/CustomerAdmin.vue'], resolve)
                 },
                 {
-                    path: '/orderAdmin',
-                    name:'orderAdmin',
-                    component: resolve => require(['../page/order/OrderAdmin.vue'], resolve)
-                },
-                {
                     path: '/bannerAdmin',
                     name:'bannerAdmin',
                     component: resolve => require(['../page/banner/BannerAdmin.vue'], resolve)
@@ -30,9 +25,24 @@ export default new Router({
                     component: resolve => require(['../page/dynamic/DynamicAdmin.vue'], resolve)
                 },
                 {
+                    path: '/videoAdmin',
+                    name:'videoAdmin',
+                    component: resolve => require(['../page/video/VideoAdmin.vue'], resolve)
+                },
+                {
                     path: '/memberAdmin',
                     name:'memberAdmin',
                     component: resolve => require(['../page/member/MemberAdmin.vue'], resolve)
+                },
+                {
+                    path: '/galleryAdmin',
+                    name:'galleryAdmin',
+                    component: resolve => require(['../page/gallery/GalleryAdmin.vue'], resolve)
+                },
+                {
+                    path: '/setPassword',
+                    name:'setPassword',
+                    component: resolve => require(['../page/account/SetPassword.vue'], resolve)
                 },
             ]
         },

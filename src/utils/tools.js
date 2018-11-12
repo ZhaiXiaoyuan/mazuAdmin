@@ -44,16 +44,9 @@ export default {
         }
         //
       Vue.tools = {
-          //临时测试
-      /*    basicConfig:{
-              basicUrl:false&&process.env.NODE_ENV=='development'?'http://zyu-server.wicp.net:19356/':'http://api.yeahcai.com',
-              qrCodeBasicUrl:'http://shopqrcode.yeahcai.com',
-              yeCaiBasicUrl:'http://yecai.happycp.com',
-              appBaickUrl:'http://happcpapp.yeahcai.com'
-          },*/
           basicConfig:{
-              basicUrl:false&&process.env.NODE_ENV=='development'?'http://zyu-server.wicp.net:19356/':'http://zyu-server.wicp.net:12412/',
-              coverBasicUrl:'http://www.globalmazu.org/mazuFile/',
+              basicUrl:process.env.NODE_ENV=='development'?'http://zyu-server.wicp.net:19356/':'http://zyu-server.wicp.net:12412/',
+              coverBasicUrl:false&&process.env.NODE_ENV=='development'?'http://zyu-server.wicp.net:13081/mazuFile/':'http://www.globalmazu.org/mazuFile/',
               qrCodeBasicUrl:'http://shopqrcode.yeahcai.cn',
               yeCaiBasicUrl:'http://yecai.happycp.cn',
               appBaickUrl:'http://happcpapp.yeahcai.cn',
