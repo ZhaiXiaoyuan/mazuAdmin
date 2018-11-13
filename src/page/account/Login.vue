@@ -145,11 +145,14 @@
                     let fb=Vue.operationFeedback({text:'登录中...'});
                     Vue.api.login({name:this.ruleForm.username,password:this.ruleForm.password}).then((resp)=>{
                         if(resp.respCode=='2000'){
-                            let data=JSON.parse(resp.respMsg);
-                            console.log('data:',data);
-                            this.$cookie.set('account',JSON.stringify(data),7);
-                            this.$router.push({name:'bannerAdmin',params:{}});
-                            fb.setOptions({type:'complete',text:'登录成功'});
+                            if(resp.respMsg=='密码错误'){
+                                fb.setOptions({type:'warn',text:'登录失败，'+resp.respMsg});
+                            }else{
+                                let data=JSON.parse(resp.respMsg);
+                                this.$cookie.set('account',JSON.stringify(data),7);
+                                this.$router.push({name:'bannerAdmin',params:{}});
+                                fb.setOptions({type:'complete',text:'登录成功'});
+                            }
                         }else{
                             fb.setOptions({type:'warn',text:'登录失败，'+resp.respMsg});
                         }

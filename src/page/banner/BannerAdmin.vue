@@ -158,6 +158,9 @@
                 });
             },
             openFormModal:function (entry) {
+                //
+                this.clearForm();
+                //
                 this.curEntry=entry;
                 console.log('this.curEntry:',this.curEntry);
                 if(this.curEntry){
@@ -167,6 +170,8 @@
             },
             closeFormModal:function () {
                 this.formModalFlag=false;
+            },
+            clearForm:function () {
                 this.form={
                     cover:null,
                 };
