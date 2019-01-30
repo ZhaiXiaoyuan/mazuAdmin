@@ -175,7 +175,7 @@
                 this.form={
                     cover:null,
                 };
-                this.$refs['form'].resetFields();
+                this.$refs['form']&&this.$refs['form'].resetFields();
             },
             save:function () {
                 if(!this.form.cover){

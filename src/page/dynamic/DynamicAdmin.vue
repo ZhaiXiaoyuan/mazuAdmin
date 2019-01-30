@@ -246,7 +246,7 @@
                     Vue.operationFeedback({type:'warn',text:'请输入内容'});
                     return;
                 }
-                let fb=Vue.operationFeedback({text:'保存中...'});
+                let fb=Vue.operationFeedback({text:'保存中...',mask:true});
                 let params={
                     adminId:this.account.id,
                     headline:this.form.headline,
