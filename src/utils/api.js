@@ -39,9 +39,7 @@ export default {
       }
     }
 
-    /**/
-    //临时测试
-      let basicUrl=false&&process.env.NODE_ENV=='development'?'http://zyu-server.wicp.net:12412/mazu-webConsole/':'http://api.globalmazu.org:8801/mazu-webConsole/';
+      let basicUrl=Vue.appConfig.domain+'/mazu-webConsole/';
 
       function sessionInfo() {
           return{
@@ -313,6 +311,14 @@ export default {
             return Vue.http.ajax({
                 method: 'post',
                 url: basicUrl+'associationNews/removePhotoFromAlbum',
+                params: params
+            });
+        },
+        //上传富文本图片
+        uploadPic:function (params) {
+            return Vue.http.ajax({
+                method: 'post',
+                url: basicUrl+'associationNews/addContentPicture',
                 params: params
             });
         },

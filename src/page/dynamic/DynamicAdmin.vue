@@ -207,7 +207,61 @@
                     let E = window.wangEditor;
                     this.editor = new E('#editor');
                     this.editor.customConfig.colors =Vue.tools.basicConfig.colors;
-                    this.editor.customConfig.uploadImgShowBase64 = true   // 使用 base64 保存图片
+                    this.editor.customConfig.uploadImgMaxSize = 5* 1024 * 1024;
+                    this.editor.customConfig.uploadImgMaxLength = 1;
+                    this.editor.customConfig.uploadImgTimeout = 3000;
+                    //this.editor.customConfig.uploadImgShowBase64 = true   // 使用 base64 保存图片
+                    this.editor.customConfig.uploadImgServer = 'http://api.globalmazu.org:8801/mazu-webConsole/associationNews/addContentPicture';
+                    this.editor.customConfig.uploadFileName = 'coverPicFile';
+                    let fb=null;
+                    this.editor.customConfig.uploadImgHooks = {
+                        before: function (xhr, editor, files) {
+                            // 图片上传之前触发
+                            // xhr 是 XMLHttpRequst 对象，editor 是编辑器对象，files 是选择的图片文件
+
+                            fb=Vue.operationFeedback({text:'上传中...',delayForDelete:1500});
+
+                            // 如果返回的结果是 {prevent: true, msg: 'xxxx'} 则表示用户放弃上传
+                            // return {
+                            //     prevent: true,
+                            //     msg: '放弃上传'
+                            // }
+                        },
+                        success: function (xhr, editor, result) {
+                            // 图片上传并返回结果，图片插入成功之后触发
+                            // xhr 是 XMLHttpRequst 对象，editor 是编辑器对象，result 是服务器端返回的结果
+                        },
+                        fail: function (xhr, editor, result) {
+                            // 图片上传并返回结果，但图片插入错误时触发
+                            // xhr 是 XMLHttpRequst 对象，editor 是编辑器对象，result 是服务器端返回的结果
+                            console.error('图片上传失败:',result);
+                            fb.setOptions({type:'warn',text:'图片上传失败'});
+                        },
+                        error: function (xhr, editor) {
+                            // 图片上传出错时触发
+                            // xhr 是 XMLHttpRequst 对象，editor 是编辑器对象
+                            console.error('图片上传失败');
+                            fb.setOptions({type:'warn',text:'图片上传失败'});
+                        },
+                        timeout: function (xhr, editor) {
+                            // 图片上传超时时触发
+                            // xhr 是 XMLHttpRequst 对象，editor 是编辑器对象
+                            console.error('图片上传超时');
+                            fb.setOptions({type:'warn',text:'图片上传失败'});
+                        },
+
+                        // 如果服务器端返回的不是 {errno:0, data: [...]} 这种格式，可使用该配置
+                        // （但是，服务器端返回的必须是一个 JSON 格式字符串！！！否则会报错）
+                        customInsert: function (insertImg, result, editor) {
+                            if(result.respCode=='2000'){
+                                insertImg(Vue.basicConfig.coverBasicUrl+result.respMsg);
+                                fb.setOptions({type:'complete',text:'上传成功',});
+                            }else{
+                                console.error('图片上传失败:',result);
+                                fb.setOptions({type:'warn',text:'图片上传失败'});
+                            }
+                        }
+                    }
                     this.editor.create();
                     this.editor.txt.clear();
                     if(this.curEntry){
@@ -341,8 +395,7 @@
             console.log('this.account:',this.account);
             //
             this.getList();
-            //
-          /*  this.openFormModal();*/
+           /* this.openFormModal();*/
 
 
         },

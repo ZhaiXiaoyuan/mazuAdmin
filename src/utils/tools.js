@@ -45,11 +45,7 @@ export default {
         //
       Vue.tools = {
           basicConfig:{
-              basicUrl:process.env.NODE_ENV=='development'?'http://zyu-server.wicp.net:19356/':'http://zyu-server.wicp.net:12412/',
-              coverBasicUrl:false&&process.env.NODE_ENV=='development'?'http://zyu-server.wicp.net:13081/mazuFile/':'http://www.globalmazu.org/mazuFile/',
-              qrCodeBasicUrl:'http://shopqrcode.yeahcai.cn',
-              yeCaiBasicUrl:'http://yecai.happycp.cn',
-              appBaickUrl:'http://happcpapp.yeahcai.cn',
+              coverBasicUrl:Vue.appConfig.fileDomain+'/mazuFile/',
               colors:[
                   '#000000',
                   '#eeece0',
